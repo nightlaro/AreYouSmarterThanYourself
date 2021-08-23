@@ -9,14 +9,15 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 
 class MemoryGameAdapter(cardsData : List<CardData>,
-                        private val clickListener: CardOnClick) : RecyclerView.Adapter<MemoryGameAdapter.CardViewHolder>() {
+                        private val clickListener: CardOnClick)
+    : RecyclerView.Adapter<MemoryGameAdapter.CardViewHolder>() {
 
-    open class CardViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+     class CardViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val itemCard = view.findViewById<CardView>(R.id.item_card)
     }
 
     interface CardOnClick {
-        fun cardOnClick(cardID: VALID_CARDS, position : Int, view : View)
+        fun cardOnClick(cardID: ValidCards, position : Int, view : View)
     }
 
     var cards = cardsData

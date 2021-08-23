@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 private const val SCORE_HISTORY = "GAME_SCORE_HISTORY"
 
@@ -15,14 +17,22 @@ private const val SCORE_HISTORY = "GAME_SCORE_HISTORY"
  */
 class HighScoreFragment : Fragment() {
     // TODO: Rename and change types of parameters
-    private var param1: String? = null
+    private var scoreHistory: ArrayList<String> = arrayListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(SCORE_HISTORY)
+            scoreHistory = it.getStringArrayList(SCORE_HISTORY) as ArrayList<String>
         }
 
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val highScoreRecyclerView = view?.findViewById<RecyclerView>(R.id.high_score_recyclerView)
+        //val adapter = HighScoreFragmentAdapter(listOf("1", "5", "8"))
+        highScoreRecyclerView?.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+        highScoreRecyclerView?.adapter = HighScoreFragmentAdapter(scoreHistory)
     }
 
     override fun onCreateView(
@@ -34,7 +44,7 @@ class HighScoreFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance(param1: String, param2: String) =
+        fun newInstance(param1: String) =
             HighScoreFragment().apply {
                 arguments = Bundle().apply {
                     putString(SCORE_HISTORY, param1)

@@ -43,10 +43,9 @@ class MemoryGameActivity : AppCompatActivity(), MemoryGameAdapter.CardOnClick {
 
         score = scoreManager.getScore()
         scoreTextView = findViewById(R.id.score)
-        scoreTextView.text = score.toString()
+        scoreTextView.text = "SCORE: ${score.toString()}"
 
         model.getCards().observe(this, Observer<List<CardData>> { cards ->
-            Log.d("MODEL", "Observer Cards: $cards")
             cardsHolder = cards.toMutableList()
             mainActivityAdapter.cards = cards
         })
@@ -100,11 +99,25 @@ class MemoryGameActivity : AppCompatActivity(), MemoryGameAdapter.CardOnClick {
 
     fun updateScore() {
         score += 1
-        scoreTextView.text = score.toString()
+        scoreTextView.text = "SCORE: ${score.toString()}"
         scoreManager.saveScore(score)
     }
 
-    override fun cardOnClick(cardID : VALID_CARDS, position: Int, view: View) {
+    fun isGameOver(): Boolean {
+        for (cards in cardsHolder) {
+            if (!cards.matched) {
+                return false
+            }
+        }
+        return true
+    }
+
+    fun resetGame() {
+        val newCards = model.loadCards()
+        model.updateCards(newCards)
+    }
+
+    override fun cardOnClick(cardID : ValidCards, position: Int, view: View) {
         viewStorage.add(CardTapped(view, position))
         model.pushCard(cardID)
         if (model.pairStorage.size > 1) {
@@ -115,6 +128,11 @@ class MemoryGameActivity : AppCompatActivity(), MemoryGameAdapter.CardOnClick {
                     updateScore()
                     removeCardView()
                     resetStorages()
+                }
+                if (isGameOver()) {
+                    scoreManager.saveScoreHistory()
+                    scoreManager.resetScore()
+                    resetGame()
                 }
             }
             invokeResetsWithDelay(1000)

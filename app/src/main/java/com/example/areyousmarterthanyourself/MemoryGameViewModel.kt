@@ -1,13 +1,11 @@
 package com.example.areyousmarterthanyourself
 
 import android.util.Log
-import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 
-enum class VALID_CARDS {
+enum class ValidCards {
     YOUTUBE,
     YELP,
     WORDPRESS,
@@ -19,7 +17,7 @@ enum class VALID_CARDS {
 }
 
 class MemoryGameViewModel() : ViewModel() {
-    val pairStorage = mutableListOf<VALID_CARDS>()
+    val pairStorage = mutableListOf<ValidCards>()
     val cards : MutableLiveData<List<CardData>> by lazy {
         MutableLiveData<List<CardData>>(loadCards())
     }
@@ -30,7 +28,7 @@ class MemoryGameViewModel() : ViewModel() {
         return firstCardId == lastCardId
     }
 
-    fun pushCard(cardId: VALID_CARDS) {
+    fun pushCard(cardId: ValidCards) {
         pairStorage.add(cardId)
     }
 
@@ -40,14 +38,14 @@ class MemoryGameViewModel() : ViewModel() {
 
     fun loadCards(): List<CardData> {
         val listOfIcons = listOf<CardData>(
-            CardData(R.drawable.ic__01_youtube, null, VALID_CARDS.YOUTUBE, false),
-            CardData(R.drawable.ic__02_yelp, null, VALID_CARDS.YELP, false),
-            CardData(R.drawable.ic__03_wordpress, null, VALID_CARDS.WORDPRESS, false),
-            CardData(R.drawable.ic__04_wikipedia, null, VALID_CARDS.WIKIPEDIA, false),
-            CardData(R.drawable.ic__05_whatsapp, null, VALID_CARDS.WHATSAPP, false),
-            CardData(R.drawable.ic__06_vine, null, VALID_CARDS.VINE, false),
-            CardData(R.drawable.ic__07_vimeo, null, VALID_CARDS.VIMEO, false),
-            CardData(R.drawable.ic__08_twitter, null, VALID_CARDS.TWITTER, false)
+            CardData(R.drawable.ic__01_youtube, null, ValidCards.YOUTUBE, false),
+            CardData(R.drawable.ic__02_yelp, null, ValidCards.YELP, false),
+            CardData(R.drawable.ic__03_wordpress, null, ValidCards.WORDPRESS, false),
+            CardData(R.drawable.ic__04_wikipedia, null, ValidCards.WIKIPEDIA, false),
+            CardData(R.drawable.ic__05_whatsapp, null, ValidCards.WHATSAPP, false),
+            CardData(R.drawable.ic__06_vine, null, ValidCards.VINE, false),
+            CardData(R.drawable.ic__07_vimeo, null, ValidCards.VIMEO, false),
+            CardData(R.drawable.ic__08_twitter, null, ValidCards.TWITTER, false)
         )
 
         return (listOfIcons + listOfIcons).shuffled()

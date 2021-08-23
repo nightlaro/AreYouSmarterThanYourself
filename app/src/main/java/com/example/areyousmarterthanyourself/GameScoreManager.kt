@@ -23,6 +23,9 @@ class GameScoreManager(val context : Context) {
     }
 
     fun saveScoreHistory() {
+        getScoreHistory()?.let {
+            historyScore = it
+        }
         val historyScoreSet = historyScore.toMutableSet()
         historyScoreSet.add(getScore().toString())
         sharedPref.edit {

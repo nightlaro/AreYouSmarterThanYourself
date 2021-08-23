@@ -10,8 +10,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val newGameButton = findViewById<Button>(R.id.new_game_button)
+        val highScoreButton = findViewById<Button>(R.id.high_score_button)
         newGameButton.setOnClickListener {
             MemoryGameActivity.launchMemoryGameActivity(this)
+        }
+        highScoreButton.setOnClickListener {
+            HighScoreActivity.launchHighScoreActivity(this)
         }
     }
 }
