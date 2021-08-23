@@ -52,7 +52,6 @@ class MemoryGameViewModel() : ViewModel() {
     }
 
     fun getCards() : LiveData<List<CardData>> {
-        Log.d("MODEL", "Cards : ${cards.value}")
         return cards
     }
 
