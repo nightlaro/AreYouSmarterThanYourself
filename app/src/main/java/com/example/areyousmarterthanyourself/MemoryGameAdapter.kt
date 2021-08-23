@@ -1,17 +1,15 @@
 package com.example.areyousmarterthanyourself
 
 import android.graphics.Color
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.cardview.widget.CardView
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
-import java.util.*
 
-class MainActivityAdapter(cardsData : List<CardData>,
-                          private val clickListener: CardOnClick) : RecyclerView.Adapter<MainActivityAdapter.CardViewHolder>() {
+class MemoryGameAdapter(cardsData : List<CardData>,
+                        private val clickListener: CardOnClick) : RecyclerView.Adapter<MemoryGameAdapter.CardViewHolder>() {
 
     open class CardViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val itemCard = view.findViewById<CardView>(R.id.item_card)

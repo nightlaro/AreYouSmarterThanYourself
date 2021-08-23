@@ -18,7 +18,7 @@ enum class VALID_CARDS {
     TWITTER
 }
 
-class MainActivityViewModel(private val state: SavedStateHandle) : ViewModel() {
+class MemoryGameViewModel() : ViewModel() {
     val pairStorage = mutableListOf<VALID_CARDS>()
     val cards : MutableLiveData<List<CardData>> by lazy {
         MutableLiveData<List<CardData>>(loadCards())
