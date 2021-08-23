@@ -42,7 +42,9 @@ class MemoryGameActivity : AppCompatActivity(), MemoryGameAdapter.CardOnClick {
         mainActivityRecyclerView.layoutManager = GridLayoutManager(this, 4)
         mainActivityRecyclerView.adapter = mainActivityAdapter
 
+        resetGame()
         score = scoreManager.getScore()
+
         scoreTextView = findViewById(R.id.score)
         scoreTextView.text = "SCORE: ${score.toString()}"
 
@@ -116,6 +118,8 @@ class MemoryGameActivity : AppCompatActivity(), MemoryGameAdapter.CardOnClick {
 
     fun resetGame() {
         val newCards = model.loadCards()
+        scoreManager.saveScoreHistory()
+        scoreManager.resetScore()
         model.updateCards(newCards)
     }
 
