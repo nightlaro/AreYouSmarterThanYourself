@@ -10,6 +10,7 @@ import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
@@ -94,6 +95,7 @@ class MemoryGameActivity : AppCompatActivity(), MemoryGameAdapter.CardOnClick {
         Handler(Looper.getMainLooper()).postDelayed({
                                                     resetCardBackground()
                                                     resetStorages()
+                                                    window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                                                     }, delayInMillis)
     }
 
@@ -121,6 +123,8 @@ class MemoryGameActivity : AppCompatActivity(), MemoryGameAdapter.CardOnClick {
         viewStorage.add(CardTapped(view, position))
         model.pushCard(cardID)
         if (model.pairStorage.size > 1) {
+            window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
             if (!isSameCardClicked()) {
                 if (model.isPair()) {
                     cardsHolder[viewStorage[0].pos].matched = true
