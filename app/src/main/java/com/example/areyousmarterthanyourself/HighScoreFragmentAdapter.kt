@@ -8,8 +8,14 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 
-class HighScoreFragmentAdapter(val scoreHistory : List<String>)
+class HighScoreFragmentAdapter(scoreHistory : List<String>)
     : RecyclerView.Adapter<HighScoreFragmentAdapter.ScoreListingViewHolder>() {
+
+    var scoreHistory = scoreHistory
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
     class ScoreListingViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val scoreItem = view.findViewById<TextView>(R.id.item_score)
@@ -23,7 +29,6 @@ class HighScoreFragmentAdapter(val scoreHistory : List<String>)
     }
 
     override fun onBindViewHolder(holder: ScoreListingViewHolder, position: Int) {
-        Log.d("HOPE" , "${scoreHistory[position]} , $scoreHistory")
         holder.scoreItem.text = scoreHistory[position]
         holder.scoreListNumbering.text = "${(position + 1)}."
     }

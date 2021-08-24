@@ -10,14 +10,10 @@ import androidx.recyclerview.widget.RecyclerView
 
 private const val SCORE_HISTORY = "GAME_SCORE_HISTORY"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [HighScoreFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class HighScoreFragment : Fragment() {
-    // TODO: Rename and change types of parameters
+
     private var scoreHistory: ArrayList<String> = arrayListOf()
+    lateinit var highScoreAdapter : HighScoreFragmentAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,9 +26,17 @@ class HighScoreFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val highScoreRecyclerView = view?.findViewById<RecyclerView>(R.id.high_score_recyclerView)
-        //val adapter = HighScoreFragmentAdapter(listOf("1", "5", "8"))
+        highScoreAdapter = HighScoreFragmentAdapter(scoreHistory)
         highScoreRecyclerView?.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-        highScoreRecyclerView?.adapter = HighScoreFragmentAdapter(scoreHistory)
+        highScoreRecyclerView?.adapter = highScoreAdapter
+    }
+
+    override fun onResume() {
+        super.onResume()
+        arguments?.let {
+            scoreHistory = it.getStringArrayList(SCORE_HISTORY) as ArrayList<String>
+        }
+        highScoreAdapter.scoreHistory = scoreHistory
     }
 
     override fun onCreateView(

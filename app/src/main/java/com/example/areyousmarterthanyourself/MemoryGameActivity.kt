@@ -45,7 +45,6 @@ class MemoryGameActivity : AppCompatActivity(), MemoryGameAdapter.CardOnClick {
         mainActivityRecyclerView.layoutManager = GridLayoutManager(this, 4)
         mainActivityRecyclerView.adapter = memoryGameAdapter
 
-//        resetGame()
         score = scoreManager.getScore()
 
         scoreTextView = findViewById(R.id.score)
@@ -61,6 +60,11 @@ class MemoryGameActivity : AppCompatActivity(), MemoryGameAdapter.CardOnClick {
         super.onPause()
         model.updateCards(cardsHolder)
         score = scoreManager.getScore()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        scoreManager.saveScoreHistory()
     }
 
     private fun resetStorages() {
@@ -103,7 +107,7 @@ class MemoryGameActivity : AppCompatActivity(), MemoryGameAdapter.CardOnClick {
 
     fun updateScore() {
         score += 1
-        scoreTextView.text = "SCORE: ${score.toString()}"
+        scoreTextView.text = "SCORE: $score"
         scoreManager.saveScore(score)
     }
 
@@ -118,14 +122,7 @@ class MemoryGameActivity : AppCompatActivity(), MemoryGameAdapter.CardOnClick {
 
     fun resetGame() {
         val newCards = model.loadCards()
-        Log.d("CARDS", "New cards $newCards, SIZE: ${newCards.size}")
-        Log.d("HISTORY", "Saving score: $score")
-        scoreManager.saveScoreHistory()
         scoreManager.resetScore()
-        score = scoreManager.getScore()
-        Log.d("HISTORY", "Resetting score ACTIVITY $score")
-        Log.d("HISTORY", "Resetting score MANAGER: ${scoreManager.getScore()}")
-        //cardsHolder = newCards.toMutableList()
         model.updateCards(newCards)
         memoryGameAdapter.cards = newCards
     }

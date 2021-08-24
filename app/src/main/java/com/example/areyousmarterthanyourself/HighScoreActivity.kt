@@ -31,9 +31,10 @@ class HighScoreActivity : AppCompatActivity() {
             gameScoreHistory.add(it)
         }
 
+        val bundle = Bundle()
+        bundle.putStringArrayList("GAME_SCORE_HISTORY", gameScoreHistory)
+
         if (savedInstanceState == null) {
-            val bundle = Bundle()
-            bundle.putStringArrayList("GAME_SCORE_HISTORY", gameScoreHistory)
             supportFragmentManager.commit {
                 add<HighScoreFragment>(R.id.high_score_fragment_container, args = bundle)
             }
