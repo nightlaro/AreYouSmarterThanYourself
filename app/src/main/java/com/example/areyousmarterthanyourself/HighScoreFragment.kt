@@ -13,7 +13,7 @@ private const val SCORE_HISTORY = "GAME_SCORE_HISTORY"
 class HighScoreFragment : Fragment() {
 
     private var scoreHistory: ArrayList<String> = arrayListOf()
-    lateinit var highScoreAdapter : HighScoreFragmentAdapter
+    private lateinit var highScoreAdapter : HighScoreFragmentAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +25,7 @@ class HighScoreFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val highScoreRecyclerView = view?.findViewById<RecyclerView>(R.id.high_score_recyclerView)
+        val highScoreRecyclerView = view.findViewById<RecyclerView>(R.id.high_score_recyclerView)
         highScoreAdapter = HighScoreFragmentAdapter(scoreHistory)
         highScoreRecyclerView?.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         highScoreRecyclerView?.adapter = highScoreAdapter
@@ -47,12 +47,4 @@ class HighScoreFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_high_score, container, false)
     }
 
-    companion object {
-        fun newInstance(param1: String) =
-            HighScoreFragment().apply {
-                arguments = Bundle().apply {
-                    putString(SCORE_HISTORY, param1)
-                }
-            }
-    }
 }

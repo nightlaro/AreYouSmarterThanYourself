@@ -13,7 +13,7 @@ class MemoryGameAdapter(cardsData : List<CardData>,
     : RecyclerView.Adapter<MemoryGameAdapter.CardViewHolder>() {
 
      class CardViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val itemCard = view.findViewById<CardView>(R.id.item_card)
+        val itemCard : CardView = view.findViewById(R.id.item_card)
     }
 
     interface CardOnClick {

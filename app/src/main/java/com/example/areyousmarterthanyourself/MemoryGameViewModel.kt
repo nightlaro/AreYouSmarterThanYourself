@@ -1,6 +1,5 @@
 package com.example.areyousmarterthanyourself
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -16,9 +15,9 @@ enum class ValidCards {
     TWITTER
 }
 
-class MemoryGameViewModel() : ViewModel() {
+class MemoryGameViewModel : ViewModel() {
     val pairStorage = mutableListOf<ValidCards>()
-    val cards : MutableLiveData<List<CardData>> by lazy {
+    private val cards : MutableLiveData<List<CardData>> by lazy {
         MutableLiveData<List<CardData>>(loadCards())
     }
 
@@ -37,7 +36,7 @@ class MemoryGameViewModel() : ViewModel() {
     }
 
     fun loadCards(): List<CardData> {
-        val listOfIcons = listOf<CardData>(
+        val listOfIcons = listOf(
             CardData(R.drawable.ic__01_youtube, null, ValidCards.YOUTUBE, false),
             CardData(R.drawable.ic__02_yelp, null, ValidCards.YELP, false),
             CardData(R.drawable.ic__03_wordpress, null, ValidCards.WORDPRESS, false),

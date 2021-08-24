@@ -1,17 +1,17 @@
 package com.example.areyousmarterthanyourself
 
 import android.content.Context
-import android.util.Log
+import android.content.SharedPreferences
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 
 class GameScoreManager(val context : Context) {
 
-    val sharedPref by lazy {
+    private val sharedPref : SharedPreferences by lazy {
         PreferenceManager.getDefaultSharedPreferences(context)
     }
 
-    var historyScore = listOf<String>()
+    private var historyScore = listOf<String>()
 
     fun saveScore(score: Int) {
         sharedPref.edit {

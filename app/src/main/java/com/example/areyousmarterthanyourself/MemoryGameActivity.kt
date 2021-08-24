@@ -7,13 +7,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.TextView
 import androidx.activity.viewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -31,29 +29,29 @@ class MemoryGameActivity : AppCompatActivity(), MemoryGameAdapter.CardOnClick {
     private val model : MemoryGameViewModel by viewModels()
     private val scoreManager = GameScoreManager(this)
     private val viewStorage = mutableListOf<CardTapped>()
-    lateinit var cardsHolder : MutableList<CardData>
-    lateinit var scoreTextView : TextView
-    lateinit var memoryGameAdapter : MemoryGameAdapter
-    var score = 0
+    private lateinit var cardsHolder : MutableList<CardData>
+    private lateinit var scoreTextView : TextView
+    private lateinit var memoryGameAdapter : MemoryGameAdapter
+    private var score = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_memory_game)
 
         val mainActivityRecyclerView = findViewById<RecyclerView>(R.id.cards_recyclerView)
-        memoryGameAdapter = MemoryGameAdapter(listOf<CardData>(), this)
+        memoryGameAdapter = MemoryGameAdapter(listOf(), this)
         mainActivityRecyclerView.layoutManager = GridLayoutManager(this, 4)
         mainActivityRecyclerView.adapter = memoryGameAdapter
 
         score = scoreManager.getScore()
 
         scoreTextView = findViewById(R.id.score)
-        scoreTextView.text = "SCORE: ${score.toString()}"
+        scoreTextView.text = "SCORE: $score"
 
-        model.getCards().observe(this, Observer<List<CardData>> { cards ->
+        model.getCards().observe(this) { cards ->
             cardsHolder = cards.toMutableList()
             memoryGameAdapter.cards = cards
-        })
+        }
     }
 
     override fun onPause() {
@@ -105,13 +103,13 @@ class MemoryGameActivity : AppCompatActivity(), MemoryGameAdapter.CardOnClick {
             }, delayInMillis)
     }
 
-    fun updateScore() {
+    private fun updateScore() {
         score += 1
         scoreTextView.text = "SCORE: $score"
         scoreManager.saveScore(score)
     }
 
-    fun isGameOver(): Boolean {
+    private fun isGameOver(): Boolean {
         for (cards in cardsHolder) {
             if (!cards.matched) {
                 return false
@@ -120,7 +118,7 @@ class MemoryGameActivity : AppCompatActivity(), MemoryGameAdapter.CardOnClick {
         return true
     }
 
-    fun resetGame() {
+    private fun resetGame() {
         val newCards = model.loadCards()
         scoreManager.resetScore()
         model.updateCards(newCards)

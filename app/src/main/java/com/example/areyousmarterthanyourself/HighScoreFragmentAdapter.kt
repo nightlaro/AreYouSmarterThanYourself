@@ -1,11 +1,9 @@
 package com.example.areyousmarterthanyourself
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 
 class HighScoreFragmentAdapter(scoreHistory : List<String>)
@@ -18,8 +16,8 @@ class HighScoreFragmentAdapter(scoreHistory : List<String>)
         }
 
     class ScoreListingViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val scoreItem = view.findViewById<TextView>(R.id.item_score)
-        val scoreListNumbering = view.findViewById<TextView>(R.id.item_score_list_number)
+        val scoreItem : TextView = view.findViewById(R.id.item_score)
+        val scoreListNumbering : TextView = view.findViewById(R.id.item_score_list_number)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScoreListingViewHolder {
