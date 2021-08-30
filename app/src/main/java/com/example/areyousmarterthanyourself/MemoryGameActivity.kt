@@ -28,7 +28,7 @@ class MemoryGameActivity : AppCompatActivity(), MemoryGameAdapter.CardOnClick {
 //        get() {
 //            //TODO look up how to create a viemodel
 //        }
-    private val scoreManager = GameScoreManager(this)
+    private val scoreManager = GameScoreManager.instance
 
     private lateinit var cardsHolder : List<CardData>
     private lateinit var scoreTextView : TextView

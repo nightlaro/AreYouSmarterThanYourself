@@ -5,11 +5,9 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import androidx.annotation.DrawableRes
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import androidx.preference.PreferenceManager
+import kotlinx.coroutines.launch
 import java.util.*
 
 enum class ValidCards {
@@ -74,14 +72,14 @@ class MemoryGameViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun resetIsTapped() {
-        val cardsTempCopy = cardsValue
+        val cardsTempCopy = cards.value!!.toMutableList()
         for (card in cardsTempCopy) {
             if (!card.matched && card.isTapped) {
                 cardsTempCopy[cardsTempCopy.indexOfFirst { it.Id == card.Id }] = card.copy(isTapped = false)
             }
         }
         updateCards(cardsTempCopy)
-        Log.d("ResetIsTapped", "Card ${cards.value}")
+//        Log.d("ResetIsTapped", "Card ${cards.value}")
     }
 
     fun setCardsMatched(firstCard : CardData, secondCard : CardData) {
@@ -91,7 +89,9 @@ class MemoryGameViewModel(app: Application) : AndroidViewModel(app) {
         cardsTempCopy[firstPos] = cardsTempCopy[firstPos].copy(matched = true)
         cardsTempCopy[secondPos] = cardsTempCopy[secondPos].copy(matched = true)
         updateCards(cardsTempCopy)
-        resetIsTapped()
+        viewModelScope.launch {
+            resetIsTapped()
+        }
     }
 
     fun isMatch(): Boolean {
