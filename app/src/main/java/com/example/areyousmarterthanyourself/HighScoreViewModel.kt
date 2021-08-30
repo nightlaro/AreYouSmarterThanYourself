@@ -1,16 +1,14 @@
 package com.example.areyousmarterthanyourself
 
 import android.app.Application
-import android.content.SharedPreferences
-import androidx.core.content.edit
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.preference.PreferenceManager
 
 class HighScoreViewModel(app: Application) : AndroidViewModel(app) {
-
-    private val scoreManager = GameScoreManager(app)
+    //on init do the observer
+    //onclear stop the observer or clean ups
+    private val scoreManager = GameScoreManager.instance
 
     private val score : Int
         get() {

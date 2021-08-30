@@ -1,5 +1,6 @@
 package com.example.areyousmarterthanyourself
 
+import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.activity.viewModels
@@ -7,6 +8,15 @@ import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 
 class GameScoreManager(val context : Context) {
+
+    companion object {
+        lateinit var instance : GameScoreManager
+        fun initialize(app: Application) {
+            if (instance == null) {
+              instance = GameScoreManager(app)
+            }
+        }
+    }
 
     private val sharedPref : SharedPreferences by lazy {
         PreferenceManager.getDefaultSharedPreferences(context)
