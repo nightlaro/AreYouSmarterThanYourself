@@ -1,16 +1,14 @@
 package com.example.areyousmarterthanyourself
 
 import android.app.Application
-import android.content.SharedPreferences
-import androidx.core.content.edit
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.preference.PreferenceManager
 
 class HighScoreViewModel(app: Application) : AndroidViewModel(app) {
 
-    private val scoreManager = GameScoreManager(app)
+    private val scoreManager = GameScoreManager.instance
 
     private val score : Int
         get() {
@@ -25,8 +23,19 @@ class HighScoreViewModel(app: Application) : AndroidViewModel(app) {
         MutableLiveData<ScoreData>(ScoreData(score, scoreHistory))
     }
 
+    init {
+        scoreManager.historyScore.observeForever {
+            scoreLiveData.value = ScoreData(score, it)
+        }
+    }
+
     fun getScoreLiveData(): LiveData<ScoreData> {
         return scoreLiveData
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        //TODO remove observers
     }
 
 }
