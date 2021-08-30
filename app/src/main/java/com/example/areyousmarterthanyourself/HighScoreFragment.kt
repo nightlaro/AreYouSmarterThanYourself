@@ -9,8 +9,6 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-private const val SCORE_HISTORY = "GAME_SCORE_HISTORY"
-
 class HighScoreFragment : Fragment() {
 
     private val model : HighScoreViewModel by viewModels()
@@ -19,16 +17,14 @@ class HighScoreFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            scoreHistory = it.getStringArrayList(SCORE_HISTORY) as ArrayList<String>
-        }
+        scoreHistory = model.getScoreLiveData().value!!.scoreHistory
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val highScoreRecyclerView = view.findViewById<RecyclerView>(R.id.high_score_recyclerView)
         highScoreAdapter = HighScoreFragmentAdapter(scoreHistory)
-        highScoreRecyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+        highScoreRecyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, true)
         highScoreRecyclerView.adapter = highScoreAdapter
 
         model.getScoreLiveData().observe(viewLifecycleOwner) {
@@ -36,6 +32,14 @@ class HighScoreFragment : Fragment() {
             highScoreAdapter.scoreHistory = it.scoreHistory
         }
     }
+
+//    override fun onResume() {
+//        super.onResume()
+//        arguments?.let {
+//            scoreHistory = it.getStringArrayList(SCORE_HISTORY) as ArrayList<String>
+//        }
+//        highScoreAdapter.scoreHistory = scoreHistory
+//    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
