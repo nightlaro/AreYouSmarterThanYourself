@@ -95,26 +95,21 @@ class MemoryGameViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun isMatch(): Boolean {
-        Log.d("PairCheck", "Checking Pair..")
         if (pairStorage.first == null || pairStorage.second == null) return false
         val firstCardId = pairStorage.first!!.cardType
         val lastCardId = pairStorage.second!!.cardType
-        Log.d("PairCheck", "Pair? : ${firstCardId == lastCardId}")
         return firstCardId == lastCardId
     }
 
     fun pushCard(card: CardData) {
-        Log.d("GameVM", "Current storage $pairStorage")
         if (pairStorage.first != null && pairStorage.second != null) {
             throw IllegalArgumentException("Pair storage is full! lol")
         }
         if (pairStorage.first == null) {
-            Log.d("GameVM", "Pushing first card $card")
             pairStorage = pairStorage.copy(first = card)
             return
         }
         if (pairStorage.second == null) {
-            Log.d("GameVM", "Pushing second card $card")
             pairStorage = pairStorage.copy(second = card)
             return
         }
@@ -168,8 +163,6 @@ class MemoryGameViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun updateCards(updatedCards : List<CardData>) {
-        Log.d("UPDATINGCARD", "Updating card..")
         cards.value = updatedCards
-        Log.d("UPDATINGCARD", "New LiveData ${cards.value}")
     }
 }
