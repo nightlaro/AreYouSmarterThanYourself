@@ -18,9 +18,6 @@ class HighScoreFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         scoreHistory = model.getScoreLiveData().value!!.scoreHistory
-//        arguments?.let {
-//            scoreHistory = it.getStringArrayList(SCORE_HISTORY) as ArrayList<String>
-//        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
