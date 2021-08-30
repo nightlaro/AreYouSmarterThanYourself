@@ -32,7 +32,7 @@ class MemoryGameAdapter(cardsData : List<CardData>,
 //        cards = newCards
         notifyItemRangeChanged(0, 2, newCards)
     }
-
+//
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_card_view_holder, parent, false)

@@ -3,7 +3,7 @@ package com.example.areyousmarterthanyourself
 import android.graphics.drawable.Drawable
 import androidx.annotation.DrawableRes
 import java.util.*
-
+//
 data class CardData(
     val Id: UUID,
     @DrawableRes

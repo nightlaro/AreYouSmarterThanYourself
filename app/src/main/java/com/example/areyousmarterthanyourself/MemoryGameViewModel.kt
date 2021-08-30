@@ -43,7 +43,7 @@ class MemoryGameViewModel(app: Application) : AndroidViewModel(app) {
     private fun loadScore(): Int {
         return scoreManager.getScore()
     }
-
+//
     fun getScore() : LiveData<Int> {
         return score
     }

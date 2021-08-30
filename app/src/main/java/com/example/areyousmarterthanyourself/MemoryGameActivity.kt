@@ -14,7 +14,7 @@ import androidx.fragment.app.add
 import androidx.fragment.app.commit
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-
+//
 class MemoryGameActivity : AppCompatActivity(), MemoryGameAdapter.CardOnClick {
 
     companion object {
