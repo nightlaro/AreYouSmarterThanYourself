@@ -2,6 +2,7 @@ package com.example.areyousmarterthanyourself
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.activity.viewModels
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 
@@ -24,7 +25,7 @@ class GameScoreManager(val context : Context) {
     }
 
     fun saveScoreHistory() {
-        getScoreHistory()?.let {
+        getScoreHistory().let {
             historyScore = it
         }
         val historyScoreSet = historyScore.toMutableSet()
@@ -34,9 +35,9 @@ class GameScoreManager(val context : Context) {
         }
     }
 
-    fun getScoreHistory(): List<String>? {
+    fun getScoreHistory(): List<String> {
         val savedHistory = sharedPref.getStringSet("SCORE_HISTORY", historyScore.toMutableSet())
-        return savedHistory?.toList()
+        return savedHistory?.toList() ?: emptyList()
     }
 
     fun resetScore() {

@@ -2,9 +2,13 @@ package com.example.areyousmarterthanyourself
 
 import android.graphics.drawable.Drawable
 import androidx.annotation.DrawableRes
+import java.util.*
 
 data class CardData(
-    val resId: DrawableRes,
-    var backgroundImage: Drawable?,
-    val id: ValidCards,
-    var matched: Boolean)
+    val Id: UUID,
+    @DrawableRes
+    val resId: Int,
+    val backgroundImage: Drawable?,
+    val cardType: ValidCards,
+    val matched: Boolean,
+    val isTapped: Boolean)

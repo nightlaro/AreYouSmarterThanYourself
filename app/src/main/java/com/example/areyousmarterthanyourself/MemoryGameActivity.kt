@@ -2,16 +2,16 @@ package com.example.areyousmarterthanyourself
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.View
-import android.view.ViewGroup
+import android.util.Log
 import android.view.WindowManager
 import android.widget.TextView
 import androidx.activity.viewModels
+import androidx.fragment.app.add
+import androidx.fragment.app.commit
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -24,14 +24,16 @@ class MemoryGameActivity : AppCompatActivity(), MemoryGameAdapter.CardOnClick {
         }
     }
 
-    data class CardTapped(val view: View, val pos : Int)
-
     private val model : MemoryGameViewModel by viewModels()
+//        get() {
+//            //TODO look up how to create a viemodel
+//        }
     private val scoreManager = GameScoreManager(this)
-    private val viewStorage = mutableListOf<CardTapped>()
-    private lateinit var cardsHolder : MutableList<CardData>
+
+    private lateinit var cardsHolder : List<CardData>
     private lateinit var scoreTextView : TextView
     private lateinit var memoryGameAdapter : MemoryGameAdapter
+    private val tempCardHolder = mutableListOf<CardData>()
     private var score = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,13 +45,24 @@ class MemoryGameActivity : AppCompatActivity(), MemoryGameAdapter.CardOnClick {
         mainActivityRecyclerView.layoutManager = GridLayoutManager(this, 4)
         mainActivityRecyclerView.adapter = memoryGameAdapter
 
-        score = scoreManager.getScore()
-
         scoreTextView = findViewById(R.id.score)
         scoreTextView.text = "SCORE: $score"
 
+        if (savedInstanceState == null) {
+            supportFragmentManager.commit {
+                add<HighScoreFragment>(R.id.high_score_fragment_container)
+            }
+        }
+
+        model.getScore().observe(this) { scoreData ->
+            Log.d("test", "Getting score")
+            score = scoreData
+            scoreTextView.text = "SCORE: $scoreData"
+        }
+
         model.getCards().observe(this) { cards ->
-            cardsHolder = cards.toMutableList()
+            Log.d("test", "Getting cards")
+            cardsHolder = cards
             memoryGameAdapter.cards = cards
         }
     }
@@ -66,29 +79,14 @@ class MemoryGameActivity : AppCompatActivity(), MemoryGameAdapter.CardOnClick {
     }
 
     private fun resetStorages() {
-        viewStorage.clear()
-        model.resetCardSet()
-    }
-
-    private fun resetCardBackground() {
-        viewStorage.forEach {
-            it.view.setBackgroundColor(Color.parseColor("black"))
-        }
-    }
-
-    private fun removeCardView() {
-        viewStorage.forEach { cardTapped ->
-            cardTapped.view.parent?.let {
-                (it as ViewGroup).removeView(cardTapped.view)
-            }
-        }
+        model.resetCardPair()
     }
 
     private fun isSameCardClicked(): Boolean {
-        if (viewStorage.isEmpty()) return false
-        val firstHashCode = viewStorage.first().hashCode()
-        val secondHashCode = viewStorage.last().hashCode()
-        if (firstHashCode == secondHashCode) {
+        if (tempCardHolder.isEmpty()) return false
+        if (tempCardHolder.size < 2) return false
+        if (tempCardHolder.first().Id == tempCardHolder.last().Id) {
+            tempCardHolder.removeLast()
             return true
         }
         return false
@@ -97,16 +95,17 @@ class MemoryGameActivity : AppCompatActivity(), MemoryGameAdapter.CardOnClick {
     private fun invokeResetsWithDelay(delayInMillis: Long) {
         Handler(Looper.getMainLooper()).postDelayed(
             {
-                resetCardBackground()
+                Log.d("RESET", "****RESETTING****")
+                tempCardHolder.clear()
+                model.resetIsTapped()
                 resetStorages()
                 window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
             }, delayInMillis)
     }
 
     private fun updateScore() {
-        score += 1
-        scoreTextView.text = "SCORE: $score"
-        scoreManager.saveScore(score)
+        val addedScore = score + 1
+        model.updateScore(addedScore)
     }
 
     private fun isGameOver(): Boolean {
@@ -119,24 +118,26 @@ class MemoryGameActivity : AppCompatActivity(), MemoryGameAdapter.CardOnClick {
     }
 
     private fun resetGame() {
-        val newCards = model.loadCards()
-        scoreManager.resetScore()
-        model.updateCards(newCards)
-        memoryGameAdapter.cards = newCards
+        model.saveScoreToHistory()
+        model.resetScore()
+        model.resetCards()
     }
 
-    override fun cardOnClick(cardID : ValidCards, position: Int, view: View) {
-        viewStorage.add(CardTapped(view, position))
-        model.pushCard(cardID)
-        if (model.pairStorage.size > 1) {
+    override fun cardOnClick(card : CardData, position: Int) {
+        tempCardHolder.add(card)
+        if(!isSameCardClicked()) {
+            val cardThatIsTapped = model.setIsTapped(position)
+            model.pushCard(cardThatIsTapped)
+        }
+        if (model.pairStorage.second != null) {
             window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
             if (!isSameCardClicked()) {
-                if (model.isPair()) {
-                    cardsHolder[viewStorage[0].pos].matched = true
-                    cardsHolder[viewStorage[1].pos].matched = true
+                if (model.isMatch()) {
+                    val (first, second) = model.pairStorage
+                    //isPair checks if pairStorage has a null, returns true if both are not null
+                    model.setCardsMatched(first!!, second!!)
                     updateScore()
-                    removeCardView()
                     resetStorages()
                 }
             }

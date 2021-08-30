@@ -1,6 +1,8 @@
 package com.example.areyousmarterthanyourself
 
+import android.content.Context
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +19,7 @@ class MemoryGameAdapter(cardsData : List<CardData>,
     }
 
     interface CardOnClick {
-        fun cardOnClick(cardID: ValidCards, position : Int, view : View)
+        fun cardOnClick(card: CardData, position : Int)
     }
 
     var cards = cardsData
@@ -26,26 +28,34 @@ class MemoryGameAdapter(cardsData : List<CardData>,
             notifyDataSetChanged()
         }
 
+    fun updateAdapterCards(newCards : List<CardData>) {
+//        cards = newCards
+        notifyItemRangeChanged(0, 2, newCards)
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_card_view_holder, parent, false)
-
         return CardViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: CardViewHolder, position: Int) {
         val backgroundImageResId = cards[position].resId
         if (!cards[position].matched) {
-            holder.itemCard.setBackgroundColor(Color.parseColor("black"))
-            holder.itemCard.setOnClickListener { view ->
-                view.background = ResourcesCompat.getDrawable(holder.itemCard.context.resources,
+            if (!cards[position].isTapped) {
+                holder.itemCard.setBackgroundColor(Color.parseColor("black"))
+            } else {
+                holder.itemCard.background = ResourcesCompat.getDrawable(holder.itemCard.context.resources,
                     backgroundImageResId,
                     null)
+            }
+            holder.itemCard.setOnClickListener { view ->
                 view.postInvalidate()
-                clickListener.cardOnClick(cards[position].id, position, view)
+                clickListener.cardOnClick(cards[position], position)
             }
         }
     }
 
     override fun getItemCount() = cards.size
+
 }
