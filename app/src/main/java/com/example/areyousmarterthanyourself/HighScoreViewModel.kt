@@ -29,7 +29,7 @@ class HighScoreViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     init {
-        scoreManager.scores.observeForever {
+        scoreManager.getScoresLiveData().observeForever {
             Log.d("HighScoreViewModel", "onInit Observing score data from manager \n" +
                     "History - $it")
             scoreLiveData.value = ScoreData(score, it)

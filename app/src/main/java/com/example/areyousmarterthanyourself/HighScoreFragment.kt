@@ -29,18 +29,10 @@ class HighScoreFragment : Fragment() {
         highScoreRecyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, true)
         highScoreRecyclerView.adapter = highScoreAdapter
 
-        manager.getScoresLiveData().observe(viewLifecycleOwner) {
-            Log.d("HighScoreFRAGMENT", "Data : $it")
-            scoreHistory = it
-            highScoreAdapter.scoreHistory = it
+        model.getScoreLiveData().observe(viewLifecycleOwner) {
+            scoreHistory = it.scoreHistory
+            highScoreAdapter.scoreHistory = it.scoreHistory
         }
-
-//        model.getScoreLiveData().observe(viewLifecycleOwner) {
-//            Log.d("HighScoreFRAGMENT", "We got new data from our ViewModel")
-//            Log.d("HighScoreFRAGMENT", "Data : ${it.scoreHistory}")
-//            scoreHistory = it.scoreHistory
-//            highScoreAdapter.scoreHistory = it.scoreHistory
-//        }
     }
 
     override fun onCreateView(
