@@ -3,7 +3,9 @@ package com.example.areyousmarterthanyourself
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.core.content.edit
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.preference.PreferenceManager
 
@@ -20,12 +22,22 @@ class GameScoreManager(val context : Context) {
         }
     }
 
+    private val TAG = "GameScoreManager"
+
     private val sharedPref : SharedPreferences by lazy {
         PreferenceManager.getDefaultSharedPreferences(context)
     }
 
-    val historyScore : MutableLiveData<List<String>> by lazy {
+    val scores : MutableLiveData<List<String>> by lazy {
         MutableLiveData<List<String>>(listOf())
+    }
+
+    fun getScoresLiveData() : LiveData<List<String>> {
+        return scores
+    }
+
+    private fun updateScoresLiveData(newScoresList : List<String>) {
+        scores.value = newScoresList
     }
 
     fun saveScore(score: Int) {
@@ -39,19 +51,16 @@ class GameScoreManager(val context : Context) {
     }
 
     fun saveScoreHistory() {
-        getScoreHistory().let {
-            historyScore.value = it
-        }
-        val historyScoreSet = historyScore.value!!.toMutableSet()
+        val historyScoreSet = scores.value!!.toMutableSet()
         historyScoreSet.add(getScore().toString())
         sharedPref.edit {
             putStringSet("SCORE_HISTORY", historyScoreSet)
         }
-        historyScore.value = historyScoreSet.toList()
+        updateScoresLiveData(historyScoreSet.toList())
     }
 
     fun getScoreHistory(): List<String> {
-        val savedHistory = sharedPref.getStringSet("SCORE_HISTORY", historyScore.value!!.toMutableSet())
+        val savedHistory = sharedPref.getStringSet("SCORE_HISTORY", scores.value!!.toMutableSet())
         return savedHistory?.toList() ?: emptyList()
     }
 

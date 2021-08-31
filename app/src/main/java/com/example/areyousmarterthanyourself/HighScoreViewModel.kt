@@ -7,6 +7,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
 class HighScoreViewModel(app: Application) : AndroidViewModel(app) {
+    //on init do the observer
+    //onclear stop the observer or clean ups
 
     private val scoreManager = GameScoreManager.instance
 
@@ -20,11 +22,16 @@ class HighScoreViewModel(app: Application) : AndroidViewModel(app) {
         }
 
     private val scoreLiveData : MutableLiveData<ScoreData> by lazy {
+        Log.d("HighScoreViewModel", "Initializing ScoreLiveData \n" +
+                "Score: $score \n" +
+                "History: $scoreHistory")
         MutableLiveData<ScoreData>(ScoreData(score, scoreHistory))
     }
 
     init {
-        scoreManager.historyScore.observeForever {
+        scoreManager.scores.observeForever {
+            Log.d("HighScoreViewModel", "onInit Observing score data from manager \n" +
+                    "History - $it")
             scoreLiveData.value = ScoreData(score, it)
         }
     }
@@ -35,7 +42,7 @@ class HighScoreViewModel(app: Application) : AndroidViewModel(app) {
 
     override fun onCleared() {
         super.onCleared()
-        //TODO remove observers
+        //remove observers
     }
 
 }
