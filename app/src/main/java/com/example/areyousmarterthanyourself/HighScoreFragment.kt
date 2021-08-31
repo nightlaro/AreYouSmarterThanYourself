@@ -1,6 +1,7 @@
 package com.example.areyousmarterthanyourself
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,12 +13,13 @@ import androidx.recyclerview.widget.RecyclerView
 class HighScoreFragment : Fragment() {
 
     private val model : HighScoreViewModel by viewModels()
+    private val manager = GameScoreManager.instance
     private var scoreHistory : List<String> = listOf()
     private lateinit var highScoreAdapter : HighScoreFragmentAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        scoreHistory = model.getScoreLiveData().value!!.scoreHistory
+//        scoreHistory = model.getScoreLiveData().value!!.scoreHistory
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -27,19 +29,19 @@ class HighScoreFragment : Fragment() {
         highScoreRecyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, true)
         highScoreRecyclerView.adapter = highScoreAdapter
 
-        model.getScoreLiveData().observe(viewLifecycleOwner) {
-            scoreHistory = it.scoreHistory
-            highScoreAdapter.scoreHistory = it.scoreHistory
+        manager.getScoresLiveData().observe(viewLifecycleOwner) {
+            Log.d("HighScoreFRAGMENT", "Data : $it")
+            scoreHistory = it
+            highScoreAdapter.scoreHistory = it
         }
-    }
 
-//    override fun onResume() {
-//        super.onResume()
-//        arguments?.let {
-//            scoreHistory = it.getStringArrayList(SCORE_HISTORY) as ArrayList<String>
+//        model.getScoreLiveData().observe(viewLifecycleOwner) {
+//            Log.d("HighScoreFRAGMENT", "We got new data from our ViewModel")
+//            Log.d("HighScoreFRAGMENT", "Data : ${it.scoreHistory}")
+//            scoreHistory = it.scoreHistory
+//            highScoreAdapter.scoreHistory = it.scoreHistory
 //        }
-//        highScoreAdapter.scoreHistory = scoreHistory
-//    }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

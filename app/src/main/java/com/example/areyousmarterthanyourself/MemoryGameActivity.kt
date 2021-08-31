@@ -25,12 +25,12 @@ class MemoryGameActivity : AppCompatActivity(), MemoryGameAdapter.CardOnClick {
     }
 
     private val model : MemoryGameViewModel by viewModels()
-//        get() {
+    //        get() {
 //            //TODO look up how to create a viemodel
 //        }
     private val scoreManager = GameScoreManager.instance
 
-    private lateinit var cardsHolder : List<CardData>
+    private lateinit var cardsData : List<CardData>
     private lateinit var scoreTextView : TextView
     private lateinit var memoryGameAdapter : MemoryGameAdapter
     private val tempCardHolder = mutableListOf<CardData>()
@@ -62,20 +62,9 @@ class MemoryGameActivity : AppCompatActivity(), MemoryGameAdapter.CardOnClick {
 
         model.getCards().observe(this) { cards ->
             Log.d("test", "Getting cards")
-            cardsHolder = cards
+            cardsData = cards
             memoryGameAdapter.cards = cards
         }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        model.updateCards(cardsHolder)
-        score = scoreManager.getScore()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        scoreManager.saveScoreHistory()
     }
 
     private fun resetStorages() {
@@ -109,7 +98,7 @@ class MemoryGameActivity : AppCompatActivity(), MemoryGameAdapter.CardOnClick {
     }
 
     private fun isGameOver(): Boolean {
-        for (cards in cardsHolder) {
+        for (cards in cardsData) {
             if (!cards.matched) {
                 return false
             }
@@ -118,8 +107,11 @@ class MemoryGameActivity : AppCompatActivity(), MemoryGameAdapter.CardOnClick {
     }
 
     private fun resetGame() {
+        Log.d("MemoryGameActivity", "Saving score to history \n" +
+                "Score: $score")
         model.saveScoreToHistory()
         model.resetScore()
+        Log.d("MemoryGameActivity", "Reset score: $score")
         model.resetCards()
     }
 
@@ -131,7 +123,7 @@ class MemoryGameActivity : AppCompatActivity(), MemoryGameAdapter.CardOnClick {
         }
         if (model.pairStorage.second != null) {
             window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
             if (!isSameCardClicked()) {
                 if (model.isMatch()) {
                     val (first, second) = model.pairStorage
@@ -139,9 +131,10 @@ class MemoryGameActivity : AppCompatActivity(), MemoryGameAdapter.CardOnClick {
                     model.setCardsMatched(first!!, second!!)
                     updateScore()
                     resetStorages()
+                    resetGame() //TEST
                 }
             }
-            invokeResetsWithDelay(1000)
+            invokeResetsWithDelay(600)
         }
         if (isGameOver()) {
             resetGame()
