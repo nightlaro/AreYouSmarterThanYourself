@@ -24,7 +24,7 @@ enum class ValidCards {
 class MemoryGameViewModel(app: Application) : AndroidViewModel(app) {
     var pairStorage = Pair<CardData?, CardData?>(null, null)
 
-    private val scoreManager = GameScoreManager(app)
+    private val scoreManager = GameScoreManager.instance
 
     private val cards : MutableLiveData<List<CardData>> by lazy {
         MutableLiveData<List<CardData>>(loadCards())

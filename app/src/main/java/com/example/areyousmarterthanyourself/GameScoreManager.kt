@@ -36,10 +36,8 @@ class GameScoreManager(val context : Context) {
         return scores
     }
 
-    private fun updateScoresLiveData(newScoresList : List<String>) {
-        Log.d(TAG, "Saving...: $newScoresList")
+     private fun updateScoresLiveData(newScoresList : List<String>) {
         scores.value = newScoresList
-        Log.d(TAG, "New LiveData: ${scores.value}")
     }
 
     fun saveScore(score: Int) {
@@ -54,15 +52,11 @@ class GameScoreManager(val context : Context) {
 
     fun saveScoreHistory() {
         val historyScoreSet = scores.value!!.toMutableSet()
-        Log.d("GameScoreManager", "Adding score to scores: ${getScore().toString()}")
         historyScoreSet.add(getScore().toString())
-        Log.d("GameScoreManager", "Updated scores: $historyScoreSet")
         sharedPref.edit {
             putStringSet("SCORE_HISTORY", historyScoreSet)
-            Log.d("GameScoreManager", "Saved file scores: $historyScoreSet")
         }
         updateScoresLiveData(historyScoreSet.toList())
-        Log.d("GameScoreManager", "Live data ${scores.value}")
     }
 
     fun getScoreHistory(): List<String> {

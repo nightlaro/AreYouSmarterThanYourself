@@ -17,18 +17,10 @@ import androidx.recyclerview.widget.RecyclerView
 
 class MemoryGameActivity : AppCompatActivity(), MemoryGameAdapter.CardOnClick {
 
-    companion object {
-        fun launchMemoryGameActivity(context: Context) {
-            val intent = Intent(context, MemoryGameActivity::class.java)
-            context.startActivity(intent)
-        }
-    }
-
     private val model : MemoryGameViewModel by viewModels()
     //        get() {
 //            //TODO look up how to create a viemodel
 //        }
-    private val scoreManager = GameScoreManager.instance
 
     private lateinit var cardsData : List<CardData>
     private lateinit var scoreTextView : TextView
@@ -55,13 +47,11 @@ class MemoryGameActivity : AppCompatActivity(), MemoryGameAdapter.CardOnClick {
         }
 
         model.getScore().observe(this) { scoreData ->
-            Log.d("test", "Getting score")
             score = scoreData
             scoreTextView.text = "SCORE: $scoreData"
         }
 
         model.getCards().observe(this) { cards ->
-            Log.d("test", "Getting cards")
             cardsData = cards
             memoryGameAdapter.cards = cards
         }
@@ -84,7 +74,6 @@ class MemoryGameActivity : AppCompatActivity(), MemoryGameAdapter.CardOnClick {
     private fun invokeResetsWithDelay(delayInMillis: Long) {
         Handler(Looper.getMainLooper()).postDelayed(
             {
-                Log.d("RESET", "****RESETTING****")
                 tempCardHolder.clear()
                 model.resetIsTapped()
                 resetStorages()
@@ -107,11 +96,8 @@ class MemoryGameActivity : AppCompatActivity(), MemoryGameAdapter.CardOnClick {
     }
 
     private fun resetGame() {
-        Log.d("MemoryGameActivity", "Saving score to history \n" +
-                "Score: $score")
         model.saveScoreToHistory()
         model.resetScore()
-        Log.d("MemoryGameActivity", "Reset score: $score")
         model.resetCards()
     }
 
@@ -131,7 +117,6 @@ class MemoryGameActivity : AppCompatActivity(), MemoryGameAdapter.CardOnClick {
                     model.setCardsMatched(first!!, second!!)
                     updateScore()
                     resetStorages()
-                    resetGame() //TEST
                 }
             }
             invokeResetsWithDelay(600)
