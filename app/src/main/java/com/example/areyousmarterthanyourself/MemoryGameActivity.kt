@@ -30,7 +30,7 @@ class MemoryGameActivity : AppCompatActivity(), MemoryGameAdapter.CardOnClick {
 //        }
     private val scoreManager = GameScoreManager(this)
 
-    private lateinit var cardsHolder : List<CardData>
+    private lateinit var cardsData : List<CardData>
     private lateinit var scoreTextView : TextView
     private lateinit var memoryGameAdapter : MemoryGameAdapter
     private val tempCardHolder = mutableListOf<CardData>()
@@ -62,14 +62,14 @@ class MemoryGameActivity : AppCompatActivity(), MemoryGameAdapter.CardOnClick {
 
         model.getCards().observe(this) { cards ->
             Log.d("test", "Getting cards")
-            cardsHolder = cards
+            cardsData = cards
             memoryGameAdapter.cards = cards
         }
     }
 
     override fun onPause() {
         super.onPause()
-        model.updateCards(cardsHolder)
+        model.updateCards(cardsData)
         score = scoreManager.getScore()
     }
 
@@ -109,7 +109,7 @@ class MemoryGameActivity : AppCompatActivity(), MemoryGameAdapter.CardOnClick {
     }
 
     private fun isGameOver(): Boolean {
-        for (cards in cardsHolder) {
+        for (cards in cardsData) {
             if (!cards.matched) {
                 return false
             }
