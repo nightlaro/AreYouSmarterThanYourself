@@ -24,7 +24,7 @@ class GameScoreManager(val context : Context) {
         PreferenceManager.getDefaultSharedPreferences(context)
     }
 
-    val historyScore : MutableLiveData<List<String>> by lazy {
+    val scores : MutableLiveData<List<String>> by lazy {
         MutableLiveData<List<String>>(listOf())
     }
 
@@ -40,18 +40,18 @@ class GameScoreManager(val context : Context) {
 
     fun saveScoreHistory() {
         getScoreHistory().let {
-            historyScore.value = it
+            scores.value = it
         }
-        val historyScoreSet = historyScore.value!!.toMutableSet()
+        val historyScoreSet = scores.value!!.toMutableSet()
         historyScoreSet.add(getScore().toString())
         sharedPref.edit {
             putStringSet("SCORE_HISTORY", historyScoreSet)
         }
-        historyScore.value = historyScoreSet.toList()
+        scores.value = historyScoreSet.toList()
     }
 
     fun getScoreHistory(): List<String> {
-        val savedHistory = sharedPref.getStringSet("SCORE_HISTORY", historyScore.value!!.toMutableSet())
+        val savedHistory = sharedPref.getStringSet("SCORE_HISTORY", scores.value!!.toMutableSet())
         return savedHistory?.toList() ?: emptyList()
     }
 
