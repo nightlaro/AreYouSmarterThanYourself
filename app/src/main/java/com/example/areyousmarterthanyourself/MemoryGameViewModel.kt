@@ -46,9 +46,9 @@ class MemoryGameViewModel(app: Application) : AndroidViewModel(app) {
         return score
     }
 
-    fun updateScore(x : Int) {
-        scoreManager.saveScore(x)
-        score.value = x
+    fun updateScore(newScore : Int) {
+        scoreManager.saveScore(newScore)
+        score.value = newScore
     }
 
     fun resetScore() {
@@ -79,7 +79,6 @@ class MemoryGameViewModel(app: Application) : AndroidViewModel(app) {
             }
         }
         updateCards(cardsTempCopy)
-//        Log.d("ResetIsTapped", "Card ${cards.value}")
     }
 
     fun setCardsMatched(firstCard : CardData, secondCard : CardData) {
@@ -119,7 +118,7 @@ class MemoryGameViewModel(app: Application) : AndroidViewModel(app) {
         pairStorage = pairStorage.copy(null, null)
     }
 
-    fun loadCards(): List<CardData> {
+    private fun loadCards(): List<CardData> {
         val listOfIcons = listOf(
             CardData(UUID.randomUUID() ,R.drawable.ic__01_youtube, null, ValidCards.YOUTUBE,
                 false, false),
@@ -162,7 +161,7 @@ class MemoryGameViewModel(app: Application) : AndroidViewModel(app) {
         return cards
     }
 
-    fun updateCards(updatedCards : List<CardData>) {
+    private fun updateCards(updatedCards : List<CardData>) {
         cards.value = updatedCards
     }
 }
