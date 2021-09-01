@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Are You Smarter than Yourself</string>
+    <string name="title_activity_main2">MainActivity2</string>
+    <string name="new_game_string">New Game</string>
+    <string name="high_score_button_string">High Score</string>
+
 </resources>
